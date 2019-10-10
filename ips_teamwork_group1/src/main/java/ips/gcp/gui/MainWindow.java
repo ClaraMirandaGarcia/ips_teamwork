@@ -5,11 +5,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 import ips.gcp.jdbc.Database;
+import ips.gcp.logic.Application;
 
 public class MainWindow {
 
 	private JFrame frame;
 	private Database db = null;
+	private Application app = null;
 
 	/**
 	 * Launch the application.
@@ -32,6 +34,9 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		initialize();
+		initDatabase();
+		app = new Application();
+		
 	}
 
 	/**
@@ -45,6 +50,8 @@ public class MainWindow {
 	
 	private void initDatabase() {
 		db = new Database();
+		db.createDatabase(true);
+		db.loadDatabase();
 	}
 
 }
