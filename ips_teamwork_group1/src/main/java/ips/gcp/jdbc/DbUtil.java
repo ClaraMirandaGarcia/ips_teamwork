@@ -23,7 +23,10 @@ import java.util.List;
  */
 public abstract class DbUtil {
 	/** Obtencion de la url de conexion que debe implementarse en la subclase */
-	public abstract String getUrl();
+	public static String getUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	/** Obtiene un objeto conexion para esta base de datos */
 	public static Connection getConnection() throws SQLException {
