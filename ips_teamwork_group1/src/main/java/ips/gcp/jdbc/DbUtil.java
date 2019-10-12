@@ -26,7 +26,7 @@ public abstract class DbUtil {
 	public abstract String getUrl();
 	
 	/** Obtiene un objeto conexion para esta base de datos */
-	public Connection getConnection() throws SQLException {
+	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(getUrl());
 	}
 
