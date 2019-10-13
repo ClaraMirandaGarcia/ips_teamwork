@@ -45,7 +45,7 @@ public class MainWindow {
 	public MainWindow() {
 		initialize();
 		initDatabase();
-		app = new Application();
+		app = new Application(db);
 		
 	}
 

@@ -68,5 +68,4 @@ public class Database extends DbUtil {
 	public Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(getUrl());
 	}
-	
 }

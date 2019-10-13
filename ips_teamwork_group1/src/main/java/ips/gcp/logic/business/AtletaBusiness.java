@@ -57,12 +57,4 @@ public class AtletaBusiness {
 		//select id from atletas order by id rownum=1 (sumar uno y returnear)
 		return 0;
 	}
-	
-	/**
-	 * Visualizar todas las competiciones abiertas para poder inscribir a un atleta.
-	 * @author Pablo
-	 */
-	public void mostrarCompeticionesAbiertas() {
-		
-	}
 }
