@@ -11,10 +11,9 @@ public class DatabaseDemo {
 	private final static String SQL_OBTAIN_ALL_ATLETAS = "SELECT idAtleta, dni, nombre, email, fechaNacimiento, sexo FROM ATLETA";
 	
 	private static Connection con;
-	private static Database db;
 	
 	public static void main(String[] args) {
-		db = new Database();
+		Database db = new Database();
 		db.createDatabase(false);
 		db.loadDatabase();
 		
@@ -25,7 +24,7 @@ public class DatabaseDemo {
 		try {
 			AtletaDTO dto = new AtletaDTO();
 			
-			con = db.getConnection();
+			con = DbUtil.getConnection();
 			
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery(SQL_OBTAIN_ALL_ATLETAS);

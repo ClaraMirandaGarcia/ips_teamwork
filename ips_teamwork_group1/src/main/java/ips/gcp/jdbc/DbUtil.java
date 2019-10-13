@@ -12,11 +12,19 @@ import java.util.List;
 
 
 public abstract class DbUtil {
+	
+	String driver;
+	static String url;
+	
 	/** Obtencion de la url de conexion que debe implementarse en la subclase */
-	public abstract String getUrl();
+	public static String getUrl() {
+		return url;
+	}
 	
 	/** Obtiene un objeto conexion para esta base de datos */
-	public abstract Connection getConnection() throws SQLException;
+	public static Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(getUrl());
+	}
 
 	//Documentacion de apache dbutils:
 	//https://commons.apache.org/proper/commons-dbutils/apidocs/index.html

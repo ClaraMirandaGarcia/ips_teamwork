@@ -19,8 +19,8 @@ public class Database extends DbUtil {
 	private static final String SQL_SCHEMA = "src/main/resources/database.sql";
 	private static final String SQL_LOAD = "src/main/resources/data.sql";
 	//parametros de la base de datos leidos de application.properties (base de datos local sin usuario/password)
-	private String driver;
-	private static String url;
+//	private String driver;
+//	private static String url;
 	private static boolean databaseCreated=false;
 
 	/**
@@ -59,13 +59,13 @@ public class Database extends DbUtil {
 		executeScript(SQL_LOAD);
 	}
 
-	@Override
-	public String getUrl() {
-		return url;
-	}
-	
-	@Override
-	public Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(getUrl());
-	}
+//	@Override
+//	public String getUrl() {
+//		return url;
+//	}
+//	
+//	@Override
+//	public Connection getConnection() throws SQLException {
+//		return DriverManager.getConnection(getUrl());
+//	}
 }
