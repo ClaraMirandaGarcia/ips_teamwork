@@ -17,7 +17,7 @@ public class AtletaBusiness {
 			database.createDatabase(true);
 			database.loadDatabase();
 
-			Connection c = DbUtil.getConnection();
+			Connection c = database.getConnection();
 			
 			check(a);
 

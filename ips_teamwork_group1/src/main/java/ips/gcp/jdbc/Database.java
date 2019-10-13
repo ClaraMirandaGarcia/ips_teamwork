@@ -1,7 +1,9 @@
 package ips.gcp.jdbc;
 import java.io.FileInputStream;
 import java.io.IOException;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.commons.dbutils.DbUtils;
@@ -37,9 +39,7 @@ public class Database extends DbUtil {
 			throw new ApplicationException("Configuracion de driver y/o url no encontrada en application.properties");
 		DbUtils.loadDriver(driver);
 	}
-	public static String getUrl() {
-		return url;
-	}
+	
 	/** 
 	 * Creacion de una base de datos limpia a partir del script schema.sql en src/main/properties
 	 * (si onlyOnce=true solo ejecutara el script la primera vez
@@ -57,6 +57,16 @@ public class Database extends DbUtil {
 	 */
 	public void loadDatabase() {
 		executeScript(SQL_LOAD);
+	}
+
+	@Override
+	public String getUrl() {
+		return url;
+	}
+	
+	@Override
+	public Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(getUrl());
 	}
 	
 }

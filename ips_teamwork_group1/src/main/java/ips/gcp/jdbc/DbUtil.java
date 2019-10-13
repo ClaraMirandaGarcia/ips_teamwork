@@ -10,28 +10,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Metodos de utilidad para simplificar las queries realizadas en las clases 
- * que implementan la logica de negocio:
- * Se implementa como una clase abstracta para que la clase derivada implemente los detalles
- * relativos a la conexion y a la estructura de la base de datos a crear, y a la vez
- * pueda usar los metodos que se definen aqui.
- * 
- * <br>La mayoria de los metodos de utilidad utilizan apache commons-dbutils que gestiona todo el manejo
- * de resultsets, su mapeo a objetos y las excepciones permitiendo un codigo mucho mas limpio 
- * en las clases de la capa de negocio y DAOs.
- */
+
 public abstract class DbUtil {
 	/** Obtencion de la url de conexion que debe implementarse en la subclase */
-	public static String getUrl() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public abstract String getUrl();
 	
 	/** Obtiene un objeto conexion para esta base de datos */
-	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(getUrl());
-	}
+	public abstract Connection getConnection() throws SQLException;
 
 	//Documentacion de apache dbutils:
 	//https://commons.apache.org/proper/commons-dbutils/apidocs/index.html
