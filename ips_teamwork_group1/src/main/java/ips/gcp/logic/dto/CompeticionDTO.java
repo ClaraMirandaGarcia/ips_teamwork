@@ -5,10 +5,12 @@ public class CompeticionDTO {
 	private int idCompeticion;
 	private String nombre;
 	private String tipo;
-	private String fechaInicio; //Las fechas son strings con sqlite
-	private String fechaFinal;
+	private String fechaInicioInscripcion; //Las fechas son strings con sqlite
+	private String fechaFinalInscripcion;
+	private String fechaCompeticion;
 	private double cuota;
 	private double distancia;
+	private int numeroPlazas;
 	
 	
 	public int getIdCompeticion() {
@@ -29,17 +31,23 @@ public class CompeticionDTO {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-	public String getFechaInicio() {
-		return fechaInicio;
+	public String getFechaInicioInscripcion() {
+		return fechaInicioInscripcion;
 	}
-	public void setFechaInicio(String fechaInicio) {
-		this.fechaInicio = fechaInicio;
+	public void setFechaInicioInscripcion(String fechaInicio) {
+		this.fechaInicioInscripcion = fechaInicio;
 	}
-	public String getFechaFinal() {
-		return fechaFinal;
+	public String getFechaFinalInscripcion() {
+		return fechaFinalInscripcion;
 	}
-	public void setFechaFinal(String fechaFinal) {
-		this.fechaFinal = fechaFinal;
+	public void setFechaFinalInscripcion(String fechaFinal) {
+		this.fechaFinalInscripcion = fechaFinal;
+	}
+	public String getFechaCompeticion() {
+		return fechaCompeticion;
+	}
+	public void setFechaCompeticion(String fechaCompeticion) {
+		this.fechaCompeticion = fechaCompeticion;
 	}
 	public double getCuota() {
 		return cuota;
@@ -52,6 +60,12 @@ public class CompeticionDTO {
 	}
 	public void setDistancia(double distancia) {
 		this.distancia = distancia;
+	}
+	public int getNumeroPlazas() {
+		return numeroPlazas;
+	}
+	public void setNumeroPlazas(int numeroPlazas) {
+		this.numeroPlazas = numeroPlazas;
 	}
 
 	

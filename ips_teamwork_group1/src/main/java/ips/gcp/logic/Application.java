@@ -17,7 +17,7 @@ public class Application {
 		try {
 			dtoList = new CompeticionBusiness().getCompeticionesAbiertas();
 		} catch (BusinessException e) {
-			throw new ApplicationException("Error: no se pudieron obtener las competiciones");
+			throw new ApplicationException("Error: no se pudieron obtener las competiciones" + e);
 		}
 		
 		return dtoList;

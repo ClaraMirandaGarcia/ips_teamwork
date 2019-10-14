@@ -2,10 +2,11 @@ package ips.gcp.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -13,10 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import ips.gcp.logic.Application;
+import ips.gcp.logic.dto.CompeticionDTO;
 
 public class UserWindow extends JDialog {
 	
@@ -46,12 +51,20 @@ public class UserWindow extends JDialog {
 		tableModel.getDataVector().clear();
 		tableModel.fireTableDataChanged();
 		
-		Object[] newRow = new Object[4];
+		Object[] newRow = new Object[6];
+
+		List<CompeticionDTO> list = app.getCompeticionesAbiertas();
 		
-		//TO DO - Código para incluir las filas de la tabla
-		app.getCompeticionesAbiertas();
-		
-		tableModel.addRow(newRow);
+		for(CompeticionDTO dto : list) {
+			newRow[0] = dto.getNombre();
+			newRow[1] = dto.getTipo();
+			newRow[2] = dto.getDistancia();
+			newRow[3] = dto.getCuota();
+			newRow[4] = dto.getFechaFinalInscripcion();
+			newRow[5] = dto.getFechaCompeticion();
+			
+			tableModel.addRow(newRow);
+		}
 	}
 	
 	
@@ -64,13 +77,17 @@ public class UserWindow extends JDialog {
 	 * Create the dialog.
 	 */
 	public UserWindow(MainWindow parent, Application app) {
+		setTitle("Gestor de Carreras Populares: Usuario");
 		this.mainWindow = parent;
 		this.app = app;
 		
-		setBounds(100, 100, 619, 413);
+		setBounds(100, 100, 857, 431);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getPnCompeticiones(), BorderLayout.CENTER);
 		getContentPane().add(getPnInscribirse(), BorderLayout.EAST);
+		
+		//Init
+		showCompeticiones();
 	}
 	
 	private JPanel getPnCompeticiones() {
@@ -92,11 +109,18 @@ public class UserWindow extends JDialog {
 	}
 	private JTable getTCompeticiones() {
 		if (tCompeticiones == null) {
-			String[] columnHeaders = {"Type", "Name", "Price per unit", "Group Price"};
+			String[] columnHeaders = {"Nombre", "Tipo", "Distancia", "Cuota", "Fin de inscripcion", "Fecha de competicion"};
 			this.tableModel = new NotEditableTableModel(columnHeaders, 0);
 			
 			tCompeticiones = new JTable(tableModel);
 			tCompeticiones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			
+			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tCompeticiones.getModel());
+			tCompeticiones.setRowSorter(sorter);
+
+			List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+			sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
+			sorter.setSortKeys(sortKeys);
 		}
 		return tCompeticiones;
 	}
@@ -148,7 +172,7 @@ public class UserWindow extends JDialog {
 			btnCancelar = new JButton("Cancelar");
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					mainWindow.initialize();
+					dispose();
 				}
 			});
 		}
