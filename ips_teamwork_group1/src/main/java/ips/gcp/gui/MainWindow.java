@@ -93,6 +93,7 @@ public class MainWindow extends JFrame {
 		pnBase.setLayout(new GridLayout(1, 1, 0, 0));
 		
 		JLabel label = new JLabel("Welcome");
+		label.setBackground(new Color(240, 240, 240));
 		pnBase.add(label);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Segoe UI Light", Font.PLAIN, 50));

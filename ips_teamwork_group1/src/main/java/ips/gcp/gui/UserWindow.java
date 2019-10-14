@@ -116,7 +116,7 @@ public class UserWindow extends JDialog {
 			btnInscribirme = new JButton("Inscribirme");
 			btnInscribirme.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					// Código para insribirse (Historia de usuario de Clara)
+					// Código para inscribirse (Historia de usuario de Clara)
 				}
 			});
 		}
