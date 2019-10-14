@@ -1,4 +1,4 @@
-package ips.gcp.jdbc;
+package ips.gcp.logic.exception;
 
 /**
  * Excepcion producida por la aplicacion antes situaciones que no deberian ocurrir pero que son controladas
