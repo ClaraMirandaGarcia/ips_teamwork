@@ -91,7 +91,12 @@ public class MainWindow {
 	private void initDatabase() {
 		db = new Database();
 		db.createDatabase(true);
-		db.loadDatabase();
+		
+		/*
+		 * Pendiente: mover el uso de este método a un botón en la ventana de 
+		 * administrador para conseguir la persistencia de la database.
+		 */
+		db.loadDatabase(); 
 	}
 
 }
