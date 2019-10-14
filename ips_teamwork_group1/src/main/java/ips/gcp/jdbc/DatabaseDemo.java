@@ -2,6 +2,7 @@ package ips.gcp.jdbc;
 
 import java.io.Console;
 import java.sql.*;
+import java.util.Calendar;
 
 import ips.gcp.logic.dto.AtletaDTO;
 
@@ -21,7 +22,8 @@ public class DatabaseDemo {
 	}
 
 	private static void obtainAllAtletas() {
-		try {
+		try {		
+			
 			AtletaDTO dto = new AtletaDTO();
 			
 			con = DbUtil.getConnection();
