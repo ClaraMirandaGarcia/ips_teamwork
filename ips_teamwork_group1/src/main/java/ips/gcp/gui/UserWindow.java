@@ -77,6 +77,7 @@ public class UserWindow extends JDialog {
 	 * Create the dialog.
 	 */
 	public UserWindow(MainWindow parent, Application app) {
+		setTitle("Gestor de Carreras Populares: Usuario");
 		this.mainWindow = parent;
 		this.app = app;
 		
@@ -171,7 +172,7 @@ public class UserWindow extends JDialog {
 			btnCancelar = new JButton("Cancelar");
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					mainWindow.initialize();
+					dispose();
 				}
 			});
 		}
