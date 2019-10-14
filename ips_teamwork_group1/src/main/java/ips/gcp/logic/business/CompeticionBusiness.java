@@ -14,8 +14,6 @@ public class CompeticionBusiness {
 	private Connection con;
 
 	// QUERIES
-	private final static String SQL_GET_ALL_COMPETICIONES_ABIERTAS1 = "";
-
 	private final static String SQL_GET_ALL_COMPETICIONES_ABIERTAS = "SELECT nombre, tipo, distancia, cuota, fechaFinalInscripcion, fechaCompeticion, numeroPlazas FROM COMPETICION WHERE fechaInicioInscripcion < ? AND fechaFinalInscripcion > ?";
 
 	/**
@@ -58,7 +56,5 @@ public class CompeticionBusiness {
 		} catch (SQLException e) {
 			throw new BusinessException(e);
 		}
-
-		//return null;
 	}
 }
