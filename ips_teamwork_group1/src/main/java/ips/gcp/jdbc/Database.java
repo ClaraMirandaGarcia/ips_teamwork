@@ -58,14 +58,4 @@ public class Database extends DbUtil {
 	public void loadDatabase() {
 		executeScript(SQL_LOAD);
 	}
-
-//	@Override
-//	public String getUrl() {
-//		return url;
-//	}
-//	
-//	@Override
-//	public Connection getConnection() throws SQLException {
-//		return DriverManager.getConnection(getUrl());
-//	}
 }

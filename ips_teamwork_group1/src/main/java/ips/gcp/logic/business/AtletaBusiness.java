@@ -13,11 +13,13 @@ public class AtletaBusiness {
 
 	public void addAtleta(AtletaDTO a) {
 		try {
+			/* Código innecesario: la base de datos ya se crea en MainWindow al inicializar.
 			Database database = new Database();
 			database.createDatabase(true);
 			database.loadDatabase();
+			*/
 
-			Connection c = database.getConnection();
+			Connection c = DbUtil.getConnection();
 			
 			check(a);
 

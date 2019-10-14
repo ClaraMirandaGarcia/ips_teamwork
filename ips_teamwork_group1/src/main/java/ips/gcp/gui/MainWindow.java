@@ -1,27 +1,27 @@
 package ips.gcp.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import ips.gcp.jdbc.Database;
 import ips.gcp.logic.Application;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import java.awt.GridLayout;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class MainWindow {
 
 	private JFrame frmGestorDeCarreras;
 	private Database db = null;
-	private Application app = null;
+	private Application app;
 
 	/**
 	 * Launch the application.
@@ -45,7 +45,7 @@ public class MainWindow {
 	public MainWindow() {
 		initialize();
 		initDatabase();
-		app = new Application(db);
+		app = new Application();
 		
 	}
 
