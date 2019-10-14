@@ -11,9 +11,10 @@ insert into atleta (idAtleta, dni, nombre, email, fechaNacimiento, sexo) values 
 insert into atleta (idAtleta, dni, nombre, email, fechaNacimiento, sexo) values (10,'44235244R','Ana Pega Tortas','anapegatorta@gmail.com','1990-12-17','Mujer');
 
 delete from competicion;
-insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (1,'Carrera AECC','Asfalto','2019-11-13','2019-11-13',8.5,5.5);
-insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (2,'San Silvestre Oviedo','Asfalto','2019-12-31','2019-12-31',5,6.5);
-insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (3,'San Silvestre Gijon','Asfalto','2019-12-31','2019-12-31',8,7);
-insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (4,'San Silvestre Aviles','Asfalto','2019-12-31','2019-12-31',7,5.5);
+insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (1,'Carrera AECC','Asfalto','2019-10-14','2019-12-13',8.5,5.5);
+insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (2,'San Silvestre Oviedo','Asfalto','2019-01-01','2019-12-31',5,6.5);
+insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (3,'San Silvestre Gijon','Asfalto','2019-01-01','2019-12-31',8,7);
+insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (4,'San Silvestre Aviles','Asfalto','2019-01-01','2019-12-31',7,5.5);
 insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (5,'Ultraman Cataluña','MontaÃ±a','2020-02-01','2020-02-03',45,88.7);
-insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (6,'Superbeast Sevilla','MontaÃ±a','2020-01-11','2020-01-12',25,65.5);
+insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (6,'Superbeast Sevilla','MontaÃ±a','2019-01-11','2020-01-12',25,65.5);
+insert into competicion (idCompeticion, nombre, tipo, fechaInicio, fechaFinal, cuota, distancia) values (7,'Gran Canaria Run','Asfalto','2018-12-31','2019-12-31',5,6.5);

@@ -17,11 +17,13 @@ import javax.swing.SwingConstants;
 import ips.gcp.jdbc.Database;
 import ips.gcp.logic.Application;
 
-public class MainWindow {
+public class MainWindow extends JFrame {
 
 	private JFrame frmGestorDeCarreras;
 	private Database db = null;
 	private Application app;
+	
+	private UserWindow userWindow = null;
 
 	/**
 	 * Launch the application.
@@ -38,6 +40,33 @@ public class MainWindow {
 			}
 		});
 	}
+	
+	
+//	##################################
+//		MÉTODOS PRIVADOS
+//	##################################
+	private void initDatabase() {
+		db = new Database();
+		db.createDatabase(true);
+		
+		/*
+		 * Pendiente: mover el uso de este método a un botón en la ventana de 
+		 * administrador para conseguir la persistencia de la database.
+		 */
+		db.loadDatabase(); 
+	}
+	
+	public void createUserWindow() {
+		this.userWindow = new UserWindow(this, app);
+		this.userWindow.setLocationRelativeTo(this);
+		this.userWindow.setModal(true);
+		this.userWindow.setVisible(true);
+	}
+	
+	
+//	##################################
+//		WINDOW MAKER CODE
+//  ##################################
 
 	/**
 	 * Create the application.
@@ -52,7 +81,7 @@ public class MainWindow {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 		frmGestorDeCarreras = new JFrame();
 		frmGestorDeCarreras.setTitle("Gestor de Carreras Populares");
 		frmGestorDeCarreras.setBounds(100, 100, 800, 500);
@@ -75,6 +104,7 @@ public class MainWindow {
 		btnUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// ABRIR NUEVA VENTANA 'UserWindow'
+				createUserWindow();
 			}
 		});
 		panel.add(btnUsuario);
@@ -87,16 +117,4 @@ public class MainWindow {
 		});
 		panel.add(btnOrganizador);
 	}
-	
-	private void initDatabase() {
-		db = new Database();
-		db.createDatabase(true);
-		
-		/*
-		 * Pendiente: mover el uso de este método a un botón en la ventana de 
-		 * administrador para conseguir la persistencia de la database.
-		 */
-		db.loadDatabase(); 
-	}
-
 }
