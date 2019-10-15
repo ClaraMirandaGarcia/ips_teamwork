@@ -4,18 +4,19 @@ import java.util.List;
 
 import ips.gcp.logic.business.AtletaBusiness;
 import ips.gcp.logic.business.BusinessException;
-import ips.gcp.logic.business.Categorias;
+import ips.gcp.logic.business.Categoria;
 import ips.gcp.logic.business.CompeticionBusiness;
 import ips.gcp.logic.business.InscripcionBusiness;
 import ips.gcp.logic.business.Justificante;
 import ips.gcp.logic.dto.AtletaDTO;
 import ips.gcp.logic.dto.CompeticionDTO;
 import ips.gcp.logic.exception.ApplicationException;
+import ips.gcp.logic.util.FileUtil;
 
 public class Application {
 
 	private InscripcionBusiness inscripcionBusiness;
-	private Categorias categorias = new Categorias();
+	private List<Categoria> categorias = FileUtil.loadFile("src/main/resources/categories");
 
 	/**
 	 * @author Pablo
@@ -51,7 +52,6 @@ public class Application {
 //	}
 
 	public Justificante solicitar(String email, CompeticionDTO dto) {
-		categorias.cargarCategorias("src/main/resources/categories.txt");
 		inscripcionBusiness = new InscripcionBusiness(categorias);
 		try {
 			Justificante just = inscripcionBusiness.solicita(email, dto);

@@ -4,22 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.List;
 
 import ips.gcp.jdbc.DbUtil;
 import ips.gcp.logic.dto.AtletaDTO;
 import ips.gcp.logic.dto.CompeticionDTO;
-import ips.gcp.logic.dto.InscripcionDTO;
 import ips.gcp.logic.exception.ApplicationException;
 
 public class InscripcionBusiness {
 
 	private CompeticionDTO competicion;
 
-	private Categorias cs;
+	private List<Categoria> categorias;
 
 	private final static int AMOUNT_PAYED_BD = 0;
 	private final static String STATE_BD = "PRE-INSCRITO";
@@ -33,10 +30,8 @@ public class InscripcionBusiness {
 	private final static String SQL_CHECK_FREE_VACANCIES = "select * from Competicion where idCompeticion = ? and numeroPlazas <= 0";
 	private final static String SQL_CORRECT_DATE = "SELECT * FROM Competicion WHERE idCompeticion = ? and (fechaInicioInscripcion >= ? OR fechaFinalInscripcion <= ?)";
 
-	public InscripcionBusiness(Categorias cs) {
-
-		this.cs = cs;
-
+	public InscripcionBusiness(List<Categoria> categorias) {
+		this.categorias = categorias;
 	}
 
 	/**
@@ -62,20 +57,20 @@ public class InscripcionBusiness {
 
 			pst.setInt(1, aux.getIdAtleta());
 			pst.setInt(2, competicion.getIdCompeticion());
-			pst.setString(3, getFechaInscripción());
-			pst.setString(4, calcularCategoria());
+			pst.setString(3, getFechaInscripción()); // Prueba pst.setDate(3, java.sql.Date.valueOf(getFechaInscripción));
+			pst.setString(4, calcularCategoria(aux));
 			pst.setString(5, STATE_BD);
 			pst.setDouble(6, AMOUNT_PAYED_BD);
 			pst.setTime(7, null);// HERE??
 			pst.setInt(8, 0);// HERE??
 
-			pst.execute();
+			pst.execute(); //Creo que aquí es executeUpdate(), que devuelve el numero de filas que modifica, aunque ni idea
 
 			// plazas libres de la competicion -> --
 			int plazasLibres = competicion.getNumeroPlazas();
 			comp.setNumeroPlazas(plazasLibres--);
 
-			Justificante justAux = new Justificante(aux.getNombre(), competicion.getNombre(), calcularCategoria(),
+			Justificante justAux = new Justificante(aux.getNombre(), competicion.getNombre(), calcularCategoria(aux),
 					getFechaInscripción(), AMOUNT_PAYED_BD);
 
 			c.close();
@@ -101,12 +96,12 @@ public class InscripcionBusiness {
 	/**
 	 * @author Adrian
 	 */
-	public String calcularCategoria() throws ApplicationException {
-		String fechaDeNacimiento = /* atleta.getFechaNacimiento(); */null;
+	public String calcularCategoria(AtletaDTO atleta) throws ApplicationException {
+		String fechaDeNacimiento = atleta.getFechaNacimiento(); 
 		int edad = calcularEdad(fechaDeNacimiento);
 
 		String nombreCat = "NOCAT";
-		for (Categoria c : cs.getCategorias()) {
+		for (Categoria c : categorias) {
 			if (edad >= c.getEdadInicio() && edad <= c.getEdadFin()) {
 				nombreCat = c.getNombre();
 				break;
@@ -114,7 +109,7 @@ public class InscripcionBusiness {
 		}
 		if (nombreCat.equals("NOCAT"))
 			throw new ApplicationException(
-					"No se pudo establecer la categoría para el atleta "/* + atleta.getIdAtleta() */);
+					"No se pudo establecer la categoría para el atleta " + atleta.getIdAtleta());
 		return nombreCat;
 	}
 
