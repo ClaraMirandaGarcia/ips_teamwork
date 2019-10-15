@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import ips.gcp.logic.Application;
+import ips.gcp.logic.business.Justificante;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -24,17 +25,20 @@ public class ReceiptWindow extends JDialog {
 	private JTextField txtFecha;
 	private JTextField txtCantidad;
 
-	
 	private CompetitionRegisterWindow competitionRegisterWindow = null;
 	private Application app = null;
+	private Justificante just = null;
 
 	/**
 	 * Create the dialog.
+	 * 
+	 * @param auxJust
 	 */
-	public ReceiptWindow(CompetitionRegisterWindow competitionRegisterWindow, Application app) {
+	public ReceiptWindow(CompetitionRegisterWindow competitionRegisterWindow, Application app, Justificante auxJust) {
 		this.competitionRegisterWindow = competitionRegisterWindow;
 		this.app = app;
-		
+		this.just = auxJust;
+
 		setBounds(100, 100, 513, 436);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -94,30 +98,35 @@ public class ReceiptWindow extends JDialog {
 					txtName.setEditable(false);
 					pnData.add(txtName);
 					txtName.setColumns(10);
+					txtName.setText(just.getNombre());
 				}
 				{
 					txtCompeticion = new JTextField();
 					txtCompeticion.setEditable(false);
 					pnData.add(txtCompeticion);
 					txtCompeticion.setColumns(10);
+					txtCompeticion.setText(just.getIdCompeticion());
 				}
 				{
 					txtCategoria = new JTextField();
 					txtCategoria.setEditable(false);
 					pnData.add(txtCategoria);
 					txtCategoria.setColumns(10);
+					txtCategoria.setText(just.getCategoria());
 				}
 				{
 					txtFecha = new JTextField();
 					txtFecha.setEditable(false);
 					pnData.add(txtFecha);
 					txtFecha.setColumns(10);
+					txtFecha.setText(just.getFecha());
 				}
 				{
 					txtCantidad = new JTextField();
 					txtCantidad.setEditable(false);
 					pnData.add(txtCantidad);
 					txtCantidad.setColumns(10);
+					txtCantidad.setText(String.valueOf(just.getAmount()));
 				}
 			}
 			{

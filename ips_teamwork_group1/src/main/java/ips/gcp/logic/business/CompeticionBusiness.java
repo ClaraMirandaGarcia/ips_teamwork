@@ -14,7 +14,7 @@ public class CompeticionBusiness {
 	private Connection con;
 
 	// QUERIES
-	private final static String SQL_GET_ALL_COMPETICIONES_ABIERTAS = "SELECT nombre, tipo, distancia, cuota, fechaFinalInscripcion, fechaCompeticion, numeroPlazas FROM COMPETICION WHERE fechaInicioInscripcion < ? AND fechaFinalInscripcion > ?";
+	private final static String SQL_GET_ALL_COMPETICIONES_ABIERTAS = "SELECT idCompeticion, nombre, tipo, distancia, cuota, fechaFinalInscripcion, fechaCompeticion, numeroPlazas FROM COMPETICION WHERE fechaInicioInscripcion < ? AND fechaFinalInscripcion > ?";
 
 	/**
 	 * Visualizar todas las competiciones abiertas para poder inscribir a un atleta.
@@ -39,6 +39,7 @@ public class CompeticionBusiness {
 			CompeticionDTO dto = null;
 			while (rs.next()) {
 				dto = new CompeticionDTO();
+				dto.setIdCompeticion(rs.getInt("idCompeticion"));
 				dto.setNombre(rs.getString("nombre"));
 				dto.setTipo(rs.getString("tipo"));
 				dto.setDistancia(rs.getDouble("distancia"));

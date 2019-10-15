@@ -24,63 +24,62 @@ import ips.gcp.logic.Application;
 import ips.gcp.logic.dto.CompeticionDTO;
 
 public class UserWindow extends JDialog {
-	
+
 	private JPanel pnCompeticiones;
 	private JScrollPane spTabla;
 	private JTable tCompeticiones;
-	
+
 	private DefaultTableModel tableModel = null;
 	private JPanel pnInscribirse;
 	private JButton btnInscribirme;
-	
+
 	private JPanel pnButtonInscr;
 	private JPanel pnRelleno;
 	private JPanel pnButtonCancel;
 	private JButton btnCancelar;
-	
+
 	private MainWindow mainWindow = null;
 	private Application app = null;
 	private CompetitionRegisterWindow competitionRegisterWindow = null;
-	
+
 	private List<CompeticionDTO> list = null;
-	
-//	##################################
-//			MÉTODOS PRIVADOS
-//	##################################
+
+	// ##################################
+	// MÉTODOS PRIVADOS
+	// ##################################
 	/**
-	* @author Pablo
-	*/
+	 * @author Pablo
+	 */
 	private void showCompeticiones() {
 		tableModel.getDataVector().clear();
 		tableModel.fireTableDataChanged();
-		
+
 		Object[] newRow = new Object[6];
 
 		list = app.getCompeticionesAbiertas();
-		
-		for(CompeticionDTO dto : list) {
+
+		for (CompeticionDTO dto : list) {
 			newRow[0] = dto.getNombre();
 			newRow[1] = dto.getTipo();
 			newRow[2] = dto.getDistancia();
 			newRow[3] = dto.getCuota();
 			newRow[4] = dto.getFechaFinalInscripcion();
 			newRow[5] = dto.getFechaCompeticion();
-			
+
 			tableModel.addRow(newRow);
 		}
 	}
-	
+
 	public void createCompetitionRegisterWindow() {
-		this.competitionRegisterWindow = new CompetitionRegisterWindow(this, app);
+		this.competitionRegisterWindow = new CompetitionRegisterWindow(this, app, list);
 		this.competitionRegisterWindow.setLocationRelativeTo(this);
 		this.competitionRegisterWindow.setModal(true);
 		this.competitionRegisterWindow.setVisible(true);
 	}
-	
-	
-//	##################################
-//			WINDOW MAKER CODE
-//	##################################
+
+	// ##################################
+	// WINDOW MAKER CODE
+	// ##################################
 	/**
 	 * Create the dialog.
 	 */
@@ -88,16 +87,16 @@ public class UserWindow extends JDialog {
 		setTitle("Gestor de Carreras Populares: Usuario");
 		this.mainWindow = parent;
 		this.app = app;
-		
+
 		setBounds(100, 100, 857, 431);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getPnCompeticiones(), BorderLayout.CENTER);
 		getContentPane().add(getPnInscribirse(), BorderLayout.EAST);
-		
-		//Init
+
+		// Init
 		showCompeticiones();
 	}
-	
+
 	private JPanel getPnCompeticiones() {
 		if (pnCompeticiones == null) {
 			pnCompeticiones = new JPanel();
@@ -107,6 +106,7 @@ public class UserWindow extends JDialog {
 		}
 		return pnCompeticiones;
 	}
+
 	private JScrollPane getSpTabla() {
 		if (spTabla == null) {
 			spTabla = new JScrollPane();
@@ -115,14 +115,16 @@ public class UserWindow extends JDialog {
 		}
 		return spTabla;
 	}
+
 	private JTable getTCompeticiones() {
 		if (tCompeticiones == null) {
-			String[] columnHeaders = {"Nombre", "Tipo", "Distancia", "Cuota", "Fin de inscripcion", "Fecha de competicion"};
+			String[] columnHeaders = { "Nombre", "Tipo", "Distancia", "Cuota", "Fin de inscripcion",
+					"Fecha de competicion" };
 			this.tableModel = new NotEditableTableModel(columnHeaders, 0);
-			
+
 			tCompeticiones = new JTable(tableModel);
 			tCompeticiones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			
+
 			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tCompeticiones.getModel());
 			tCompeticiones.setRowSorter(sorter);
 
@@ -132,6 +134,7 @@ public class UserWindow extends JDialog {
 		}
 		return tCompeticiones;
 	}
+
 	private JPanel getPnInscribirse() {
 		if (pnInscribirse == null) {
 			pnInscribirse = new JPanel();
@@ -143,31 +146,32 @@ public class UserWindow extends JDialog {
 		}
 		return pnInscribirse;
 	}
+
 	private JButton getBtnInscribirme() {
 		if (btnInscribirme == null) {
 			btnInscribirme = new JButton("Inscribirme");
 			btnInscribirme.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					// Código para inscribirse (Historia de usuario de Clara)
-					CompeticionDTO dto = getDTOFromTable(tCompeticiones);	
-					app.createInscripcion(dto);
+					// CompeticionDTO dto = getDTOFromTable(tCompeticiones);
+					// app.createInscripcion(dto);
 					createCompetitionRegisterWindow();
 				}
 			});
 		}
 		return btnInscribirme;
 	}
-	
-	private CompeticionDTO getDTOFromTable(JTable t) {
-		String nombre = (String)t.getValueAt(t.getSelectedRow(), 0);
-		for(CompeticionDTO each : list) {
-			if(each.getNombre().equals(nombre)) {
-				return each;
-			}
-		}
-		return null;
-	}
-	
+
+	// private CompeticionDTO getDTOFromTable(JTable t) {
+	// String nombre = (String)t.getValueAt(t.getSelectedRow(), 0);
+	// for(CompeticionDTO each : list) {
+	// if(each.getNombre().equals(nombre)) {
+	// return each;
+	// }
+	// }
+	// return null;
+	// }
+
 	private JPanel getPnButtonInscr() {
 		if (pnButtonInscr == null) {
 			pnButtonInscr = new JPanel();
@@ -175,12 +179,14 @@ public class UserWindow extends JDialog {
 		}
 		return pnButtonInscr;
 	}
+
 	private JPanel getPnRelleno() {
 		if (pnRelleno == null) {
 			pnRelleno = new JPanel();
 		}
 		return pnRelleno;
 	}
+
 	private JPanel getPnButtonCancel() {
 		if (pnButtonCancel == null) {
 			pnButtonCancel = new JPanel();
@@ -189,6 +195,7 @@ public class UserWindow extends JDialog {
 		}
 		return pnButtonCancel;
 	}
+
 	private JButton getBtnCancelar() {
 		if (btnCancelar == null) {
 			btnCancelar = new JButton("Cancelar");

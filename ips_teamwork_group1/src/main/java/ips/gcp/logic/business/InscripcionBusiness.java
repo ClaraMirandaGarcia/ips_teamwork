@@ -28,31 +28,33 @@ public class InscripcionBusiness {
 			+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private final static String SQL_SEARCH_ATHLETE_BY_EMAIL = "select * from atleta where email = ?";
-	private final static String SQL_SEARCH_COMPETITION_BY_ID = "select * from competition where idCompetition = ?";
-	private final static String SQL_CHECK_MORE_THAN_ONCE = "select * from inscripcion where email = ? and idCompeticion = ?";
-    private final static String SQL_CHECK_FREE_VACANCIES = "select * from competition where idCompeticion = ? and numeroPlazas <= 0";
-    private final static String SQL_CORRECT_DATE = "SELECT * FROM COMPETICION WHERE idcompetition = ? and (fechaInicioInscripcion >= ? OR fechaFinalInscripcion <= ?)";
+	private final static String SQL_SEARCH_COMPETITION_BY_ID = "select * from competition where idCompeticion = ?";
+	private final static String SQL_CHECK_MORE_THAN_ONCE = "select i.* from Inscripcion i, Atleta a where a.email = ? and a.idAtleta = i.idAtleta and i.idCompeticion = ?";
+	private final static String SQL_CHECK_FREE_VACANCIES = "select * from Competicion where idCompeticion = ? and numeroPlazas <= 0";
+	private final static String SQL_CORRECT_DATE = "SELECT * FROM Competicion WHERE idCompeticion = ? and (fechaInicioInscripcion >= ? OR fechaFinalInscripcion <= ?)";
 
 	public InscripcionBusiness(Categorias cs) {
 
 		this.cs = cs;
 
 	}
-	
+
 	/**
 	 * @author CMG
+	 * @throws BusinessException
 	 */
-	public void solicita(String email, CompeticionDTO competicion) {
+	public Justificante solicita(String email, CompeticionDTO comp) throws BusinessException {
 
 		try {
 			// getConnection
 			Connection c = DbUtil.getConnection();
 
-			this.competicion = competicion;
-			
-			 checkNotRepited(email, competicion.getIdCompeticion());
-			 checkInscripionDate(competicion.getIdCompeticion());
-			 checkFreeVacancies(competicion.getIdCompeticion());
+			this.competicion = comp;
+
+			// checking
+			checkNotRepited(email, competicion.getIdCompeticion());
+			checkInscripionDate(competicion.getIdCompeticion());
+			checkFreeVacancies(competicion.getIdCompeticion());
 
 			// inserting
 			PreparedStatement pst = c.prepareStatement(SQL_INSERT_INSCRIPTION);
@@ -61,8 +63,7 @@ public class InscripcionBusiness {
 			pst.setInt(1, aux.getIdAtleta());
 			pst.setInt(2, competicion.getIdCompeticion());
 			pst.setString(3, getFechaInscripción());
-			calcularCategoria();
-			//pst.setString(4, inscripcion.getCategoria());
+			pst.setString(4, calcularCategoria());
 			pst.setString(5, STATE_BD);
 			pst.setDouble(6, AMOUNT_PAYED_BD);
 			pst.setTime(7, null);// HERE??
@@ -70,39 +71,38 @@ public class InscripcionBusiness {
 
 			pst.execute();
 
-            // plazas libres de la competicion -> --
+			// plazas libres de la competicion -> --
+			int plazasLibres = competicion.getNumeroPlazas();
+			comp.setNumeroPlazas(plazasLibres--);
+
+			Justificante justAux = new Justificante(aux.getNombre(), competicion.getNombre(), calcularCategoria(),
+					getFechaInscripción(), AMOUNT_PAYED_BD);
 
 			c.close();
+			return justAux;
 		} catch (SQLException e) {
-
-		}
-		// checking
-		catch (BusinessException e) {
-			//AQUÍ?
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new BusinessException(e.getMessage());
 		}
 
 	}
 
 	private String getFechaInscripción() {
-		//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		//LocalDate localDate = LocalDate.now();
-		//return dtf.format(localDate); // 2016/11/16
+		// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		// LocalDate localDate = LocalDate.now();
+		// return dtf.format(localDate); // 2016/11/16
 
-
-        int year = Calendar.getInstance().get(Calendar.YEAR);
+		int year = Calendar.getInstance().get(Calendar.YEAR);
 		int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		String fecha = year + "-" + month + "-" + day;
-        return fecha;
+		return fecha;
 	}
 
 	/**
 	 * @author Adrian
 	 */
 	public String calcularCategoria() throws ApplicationException {
-		String fechaDeNacimiento = /*atleta.getFechaNacimiento();*/null;
+		String fechaDeNacimiento = /* atleta.getFechaNacimiento(); */null;
 		int edad = calcularEdad(fechaDeNacimiento);
 
 		String nombreCat = "NOCAT";
@@ -113,7 +113,8 @@ public class InscripcionBusiness {
 			}
 		}
 		if (nombreCat.equals("NOCAT"))
-			throw new ApplicationException("No se pudo establecer la categoría para el atleta "/* + atleta.getIdAtleta()*/);
+			throw new ApplicationException(
+					"No se pudo establecer la categoría para el atleta "/* + atleta.getIdAtleta() */);
 		return nombreCat;
 	}
 
@@ -150,39 +151,39 @@ public class InscripcionBusiness {
 
 			c.close();
 		} catch (SQLException e) {
-
+			throw new BusinessException(e.getMessage());
 		}
 	}
 
 	/**
 	 * @author CMG
-	 * @throws BusinessException 
+	 * @throws BusinessException
 	 */
 	public void checkInscripionDate(int idCompeticion) throws BusinessException {
-       try {
+		try {
 			// getConnection
 			Connection c = DbUtil.getConnection();
 
 			// inserting
 			PreparedStatement pst = c.prepareStatement(SQL_CORRECT_DATE);
 			pst.setInt(1, idCompeticion);
-            pst.setString(2, getFechaInscripción());
-            pst.setString(3, getFechaInscripción());
+			pst.setString(2, getFechaInscripción());
+			pst.setString(3, getFechaInscripción());
 			ResultSet rs = pst.executeQuery();
 
 			if (rs.next()) {
-				throw new BusinessException("No hay plazas libres en la competición " + idCompeticion );
+				throw new BusinessException("No hay plazas libres en la competición " + idCompeticion);
 			}
 
 			c.close();
 		} catch (SQLException e) {
-
-		}  
+			throw new BusinessException(e.getMessage());
+		}
 	}
 
 	/**
 	 * @author CMG
-	 * @throws BusinessException 
+	 * @throws BusinessException
 	 */
 	public void checkFreeVacancies(int idCompeticion) throws BusinessException {
 		try {
@@ -195,19 +196,20 @@ public class InscripcionBusiness {
 			ResultSet rs = pst.executeQuery();
 
 			if (rs.next()) {
-				throw new BusinessException("No hay plazas libres en la competición " + idCompeticion );
+				throw new BusinessException("No hay plazas libres en la competición " + idCompeticion);
 			}
 
 			c.close();
 		} catch (SQLException e) {
-
+			throw new BusinessException(e.getMessage());
 		}
 	}
 
 	/**
 	 * @author CMG
+	 * @throws BusinessException 
 	 */
-	public AtletaDTO searchAthletaByEmail(String email) {
+	public AtletaDTO searchAthletaByEmail(String email) throws BusinessException {
 		AtletaDTO aux = new AtletaDTO();
 
 		// getConnection
@@ -235,8 +237,7 @@ public class InscripcionBusiness {
 			// return aux;
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new BusinessException(e.getMessage());
 		}
 		return aux;
 	}
