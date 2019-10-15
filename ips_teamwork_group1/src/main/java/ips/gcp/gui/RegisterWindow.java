@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 
 import ips.gcp.logic.Application;
 import ips.gcp.logic.dto.AtletaDTO;
+import ips.gcp.logic.util.FileUtil;
 
 /**
  * @author Lucia
@@ -263,5 +264,7 @@ public class RegisterWindow extends JDialog {
 		a.setFechaNacimiento(fecha);
 		
 		new Application().addAtleta(a);
+		
+		FileUtil.saveUserFile(a);
 	}
 }
