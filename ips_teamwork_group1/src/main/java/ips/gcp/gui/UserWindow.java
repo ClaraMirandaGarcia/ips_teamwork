@@ -40,6 +40,7 @@ public class UserWindow extends JDialog {
 	
 	private MainWindow mainWindow = null;
 	private Application app = null;
+	private CompetitionRegisterWindow competitionRegisterWindow = null;
 	
 //	##################################
 //			MÉTODOS PRIVADOS
@@ -67,7 +68,12 @@ public class UserWindow extends JDialog {
 		}
 	}
 	
-	
+	public void createCompetitionRegisterWindow() {
+		this.competitionRegisterWindow = new CompetitionRegisterWindow(this, app);
+		this.competitionRegisterWindow.setLocationRelativeTo(this);
+		this.competitionRegisterWindow.setModal(true);
+		this.competitionRegisterWindow.setVisible(true);
+	}
 	
 	
 //	##################################
@@ -141,6 +147,7 @@ public class UserWindow extends JDialog {
 			btnInscribirme.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					// Código para inscribirse (Historia de usuario de Clara)
+					createCompetitionRegisterWindow();
 				}
 			});
 		}

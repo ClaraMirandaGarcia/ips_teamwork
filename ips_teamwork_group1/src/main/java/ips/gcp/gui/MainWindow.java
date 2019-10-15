@@ -1,29 +1,55 @@
 package ips.gcp.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import ips.gcp.jdbc.Database;
 import ips.gcp.logic.Application;
 
+import java.awt.CardLayout;
+import java.awt.Color;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.FlowLayout;
+
 public class MainWindow extends JFrame {
 
-	private JFrame frmGestorDeCarreras;
+	private JPanel contentPane;
+	
+	// CardLayout Code
+	private final static String WELCOME = "pnChoiceInit";
+	private final static String USUARIO = "pnUsuario";
+	
+	// Logic Code
 	private Database db = null;
 	private Application app;
 	
+	// Gui Windows Code
 	private UserWindow userWindow = null;
+	private RegisterWindow registerWindow = null;
+	
+	private JPanel pnChoiceInit;
+	private JPanel pnBaseLbl;
+	private JLabel lblBienvenido;
+	private JPanel pnButtonsUserOrg;
+	private JButton btnUsuario;
+	private JButton btnOrganizador;
+	private JPanel pnUsuario;
+	private JPanel pnBaseSelect;
+	private JLabel lblPorFavorSeleccione;
+	private JPanel pnButtonsRegMostrar;
+	private JButton btnRegistrarme;
+	private JButton btnMostrarCompeticiones;
+	private JPanel pnAtras;
+	private JButton btnVolver;
 
 	/**
 	 * Launch the application.
@@ -32,8 +58,8 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow window = new MainWindow();
-					window.frmGestorDeCarreras.setVisible(true);
+					MainWindow frame = new MainWindow();
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -41,9 +67,8 @@ public class MainWindow extends JFrame {
 		});
 	}
 	
-	
 //	##################################
-//		MÉTODOS PRIVADOS
+//			MÉTODOS PRIVADOS
 //	##################################
 	private void initDatabase() {
 		db = new Database();
@@ -63,59 +88,182 @@ public class MainWindow extends JFrame {
 		this.userWindow.setVisible(true);
 	}
 	
+	public void createRegisterWindow() {
+		this.registerWindow = new RegisterWindow(this, app);
+		this.registerWindow.setLocationRelativeTo(this);
+		this.registerWindow.setModal(true);
+		this.registerWindow.setVisible(true);
+	}
 	
-//	##################################
-//		WINDOW MAKER CODE
-//  ##################################
-
-	/**
-	 * Create the application.
-	 */
-	public MainWindow() {
-		initialize();
-		initDatabase();
-		app = new Application();
+	// Shows the pane corresponding to the code
+	// Also, sets the default button of each of the panes
+	public void showPane(String paneStringCode) {
+		((CardLayout)contentPane.getLayout()).show(contentPane, paneStringCode);
 		
+		if(paneStringCode.equals(WELCOME)) {
+			this.getRootPane().setDefaultButton(btnUsuario);
+		} else {
+			if(paneStringCode.equals(USUARIO)) {
+				this.getRootPane().setDefaultButton(btnRegistrarme);
+			} 
+		}
 	}
 
+
+//	##################################
+//			WINDOW MAKER CODE
+//	##################################
+
 	/**
-	 * Initialize the contents of the frame.
+	 * Create the frame.
 	 */
-	public void initialize() {
-		frmGestorDeCarreras = new JFrame();
-		frmGestorDeCarreras.setTitle("Gestor de Carreras Populares");
-		frmGestorDeCarreras.setBounds(100, 100, 800, 500);
-		frmGestorDeCarreras.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public MainWindow() {
+		setTitle("Gestor de Carreras Populares");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 800, 500);
+		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new CardLayout(0, 0));
+		contentPane.add(getPnChoiceInit(), WELCOME);
+		contentPane.add(getPnUsuario(), USUARIO);
 		
-		JPanel pnBase = new JPanel();
-		pnBase.setBackground(Color.WHITE);
-		frmGestorDeCarreras.getContentPane().add(pnBase, BorderLayout.CENTER);
-		pnBase.setLayout(new GridLayout(1, 1, 0, 0));
-		
-		JLabel label = new JLabel("Welcome");
-		label.setBackground(new Color(240, 240, 240));
-		pnBase.add(label);
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setFont(new Font("Segoe UI Light", Font.PLAIN, 50));
-		
-		JPanel panel = new JPanel();
-		frmGestorDeCarreras.getContentPane().add(panel, BorderLayout.SOUTH);
-		
-		JButton btnUsuario = new JButton("Usuario");
-		btnUsuario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// ABRIR NUEVA VENTANA 'UserWindow'
-				createUserWindow();
-			}
-		});
-		panel.add(btnUsuario);
-		
-		JButton btnOrganizador = new JButton("Organizador");
-		btnOrganizador.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//ABRIR NUEVA VENTANA 'AdminWindow'
-			}
-		});
-		panel.add(btnOrganizador);
+		initDatabase();
+		app = new Application();
+	}
+
+	private JPanel getPnChoiceInit() {
+		if (pnChoiceInit == null) {
+			pnChoiceInit = new JPanel();
+			pnChoiceInit.setBackground(Color.WHITE);
+			pnChoiceInit.setLayout(new BorderLayout(0, 0));
+			pnChoiceInit.add(getPnBaseLbl(), BorderLayout.CENTER);
+			pnChoiceInit.add(getPnButtonsUserOrg(), BorderLayout.SOUTH);
+		}
+		return pnChoiceInit;
+	}
+	private JPanel getPnBaseLbl() {
+		if (pnBaseLbl == null) {
+			pnBaseLbl = new JPanel();
+			pnBaseLbl.setBackground(Color.WHITE);
+			pnBaseLbl.setLayout(new BorderLayout(0, 0));
+			pnBaseLbl.add(getLblBienvenido(), BorderLayout.CENTER);
+		}
+		return pnBaseLbl;
+	}
+	private JLabel getLblBienvenido() {
+		if (lblBienvenido == null) {
+			lblBienvenido = new JLabel("Bienvenido");
+			lblBienvenido.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBienvenido.setFont(new Font("Segoe UI Light", Font.PLAIN, 50));
+		}
+		return lblBienvenido;
+	}
+	private JPanel getPnButtonsUserOrg() {
+		if (pnButtonsUserOrg == null) {
+			pnButtonsUserOrg = new JPanel();
+			pnButtonsUserOrg.add(getBtnUsuario());
+			pnButtonsUserOrg.add(getBtnOrganizador());
+		}
+		return pnButtonsUserOrg;
+	}
+	private JButton getBtnUsuario() {
+		if (btnUsuario == null) {
+			btnUsuario = new JButton("Usuario");
+			btnUsuario.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					showPane(USUARIO);
+				}
+			});
+		}
+		return btnUsuario;
+	}
+	private JButton getBtnOrganizador() {
+		if (btnOrganizador == null) {
+			btnOrganizador = new JButton("Organizador");
+		}
+		return btnOrganizador;
+	}
+	private JPanel getPnUsuario() {
+		if (pnUsuario == null) {
+			pnUsuario = new JPanel();
+			pnUsuario.setBackground(Color.WHITE);
+			pnUsuario.setLayout(new BorderLayout(0, 0));
+			pnUsuario.add(getPnBaseSelect(), BorderLayout.CENTER);
+			pnUsuario.add(getPnButtonsRegMostrar(), BorderLayout.SOUTH);
+			pnUsuario.add(getPnAtras(), BorderLayout.NORTH);
+		}
+		return pnUsuario;
+	}
+	private JPanel getPnBaseSelect() {
+		if (pnBaseSelect == null) {
+			pnBaseSelect = new JPanel();
+			pnBaseSelect.setBackground(Color.WHITE);
+			pnBaseSelect.setLayout(new BorderLayout(0, 0));
+			pnBaseSelect.add(getLblPorFavorSeleccione());
+		}
+		return pnBaseSelect;
+	}
+	private JLabel getLblPorFavorSeleccione() {
+		if (lblPorFavorSeleccione == null) {
+			lblPorFavorSeleccione = new JLabel("Por favor, seleccione una opci\u00F3n:");
+			lblPorFavorSeleccione.setHorizontalAlignment(SwingConstants.CENTER);
+			lblPorFavorSeleccione.setBackground(Color.WHITE);
+			lblPorFavorSeleccione.setFont(new Font("Segoe UI Light", Font.PLAIN, 30));
+		}
+		return lblPorFavorSeleccione;
+	}
+	private JPanel getPnButtonsRegMostrar() {
+		if (pnButtonsRegMostrar == null) {
+			pnButtonsRegMostrar = new JPanel();
+			pnButtonsRegMostrar.add(getBtnRegistrarme());
+			pnButtonsRegMostrar.add(getBtnMostrarCompeticiones());
+		}
+		return pnButtonsRegMostrar;
+	}
+	private JButton getBtnRegistrarme() {
+		if (btnRegistrarme == null) {
+			btnRegistrarme = new JButton("Registrarme");
+			btnRegistrarme.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					createRegisterWindow();
+				}
+			});
+		}
+		return btnRegistrarme;
+	}
+	private JButton getBtnMostrarCompeticiones() {
+		if (btnMostrarCompeticiones == null) {
+			btnMostrarCompeticiones = new JButton("Mostrar competiciones");
+			btnMostrarCompeticiones.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					createUserWindow();
+				}
+			});
+		}
+		return btnMostrarCompeticiones;
+	}
+	private JPanel getPnAtras() {
+		if (pnAtras == null) {
+			pnAtras = new JPanel();
+			pnAtras.setBackground(Color.WHITE);
+			FlowLayout flowLayout = (FlowLayout) pnAtras.getLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			pnAtras.add(getBtnVolver());
+		}
+		return pnAtras;
+	}
+	private JButton getBtnVolver() {
+		if (btnVolver == null) {
+			btnVolver = new JButton("Volver");
+			btnVolver.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					showPane(WELCOME);
+				}
+			});
+			btnVolver.setHorizontalAlignment(SwingConstants.LEFT);
+		}
+		return btnVolver;
 	}
 }

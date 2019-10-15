@@ -41,24 +41,17 @@ public class RegisterWindow extends JDialog {
 	private JComboBox comboBoxYear;
 	private JLabel lblApellidos;
 	private JTextField txtApellidos;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			RegisterWindow dialog = new RegisterWindow();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
+	private Application app = null;
+	private MainWindow mainWindow = null;
 
 	/**
 	 * Create the dialog.
 	 */
-	public RegisterWindow() {
+	public RegisterWindow(MainWindow parent, Application app) {
+		this.mainWindow = parent;
+		this.app = app;
+		
 		setTitle("Registro");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -113,7 +106,7 @@ public class RegisterWindow extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						System.exit(0);
+						dispose();
 					}
 				});
 				cancelButton.setActionCommand("Cancel");
