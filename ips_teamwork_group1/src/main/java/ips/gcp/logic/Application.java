@@ -2,8 +2,10 @@ package ips.gcp.logic;
 
 import java.util.List;
 
+import ips.gcp.logic.business.AtletaBusiness;
 import ips.gcp.logic.business.BusinessException;
 import ips.gcp.logic.business.CompeticionBusiness;
+import ips.gcp.logic.dto.AtletaDTO;
 import ips.gcp.logic.dto.CompeticionDTO;
 import ips.gcp.logic.exception.ApplicationException;
 
@@ -21,5 +23,16 @@ public class Application {
 		}
 		
 		return dtoList;
+	}
+	
+	/**
+	 * @author Lucia
+	 */
+	public void addAtleta(AtletaDTO a) {
+		try {
+			new AtletaBusiness().addAtleta(a);
+		} catch (BusinessException e) {
+			throw new ApplicationException("Error: datos(email/dni) repetidos" + e);
+		}
 	}
 }

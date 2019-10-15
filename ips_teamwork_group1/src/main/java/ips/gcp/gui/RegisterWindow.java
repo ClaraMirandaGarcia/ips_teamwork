@@ -1,29 +1,29 @@
 package ips.gcp.gui;
 
-import java.awt.EventQueue;
-
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import ips.gcp.logic.business.AtletaBusiness;
-import ips.gcp.logic.dto.AtletaDTO;
-
 import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JRadioButton;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
+import ips.gcp.logic.Application;
+import ips.gcp.logic.dto.AtletaDTO;
+
+/**
+ * @author Lucia
+ */
 public class RegisterWindow extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -111,6 +111,11 @@ public class RegisterWindow extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.exit(0);
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -202,8 +207,8 @@ public class RegisterWindow extends JDialog {
 		if (comboBoxMes == null) {
 			comboBoxMes = new JComboBox();
 			comboBoxMes.setBounds(210, 194, 84, 20);
-			comboBoxMes.setModel(new DefaultComboBoxModel<Object>(new String[] { "January ", "February", "March",
-					"April", "May", "June", "July", "August", "September ", "October", "November", "December" }));
+			comboBoxMes.setModel(new DefaultComboBoxModel<Object>(new String[] { "01 ", "02", "03",
+					"04", "05", "06", "07", "08", "09 ", "10", "11", "12" }));
 		}
 		return comboBoxMes;
 	}
@@ -237,18 +242,17 @@ public class RegisterWindow extends JDialog {
 	}
 
 	private void createAtleta() {
-		// check email/dni
 		String name = txtNombre.getText();
 		name = name + " " + txtApellidos.getText();
 		String email = txtEmail.getText();
 		String dni = txtDNI.getText();
 		String sexo;
 		if (rdbtnHombre.isSelected()) {
-			sexo = "hombre";
+			sexo = "Hombre";
 		} else {
-			sexo = "mujer";
+			sexo = "Mujer";
 		}
-		String fecha = comboBoxDia.getSelectedItem().toString() + " / " + comboBoxMes.getSelectedItem().toString() + "/ "
+		String fecha = comboBoxDia.getSelectedItem().toString() + "-" + comboBoxMes.getSelectedItem().toString() + "-"
 				+ comboBoxYear.getSelectedItem().toString();
 		
 		AtletaDTO a = new AtletaDTO();
@@ -258,6 +262,6 @@ public class RegisterWindow extends JDialog {
 		a.setSexo(sexo);
 		a.setFechaNacimiento(fecha);
 		
-		new AtletaBusiness().addAtleta(a);
+		new Application().addAtleta(a);
 	}
 }
