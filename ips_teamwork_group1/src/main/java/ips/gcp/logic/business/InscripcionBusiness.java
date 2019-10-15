@@ -30,13 +30,15 @@ public class InscripcionBusiness {
 	private final static String SQL_SEARCH_ATHLETE_BY_EMAIL = "select * from atleta where email = ?";
 	private final static String SQL_SEARCH_COMPETITION_BY_ID = "select * from competition where idCompetition = ?";
 	private final static String SQL_CHECK_MORE_THAN_ONCE = "select * from inscripcion where email = ? and idCompeticion = ?";
+    private final static String SQL_CHECK_FREE_VACANCIES = "select * from competition where idCompeticion = ? and numeroPlazas <= 0";
+    private final static String SQL_CORRECT_DATE = "SELECT * FROM COMPETICION WHERE idcompetition = ? and (fechaInicioInscripcion >= ? OR fechaFinalInscripcion <= ?)";
 
 	public InscripcionBusiness(Categorias cs) {
 
 		this.cs = cs;
 
 	}
-
+	
 	/**
 	 * @author CMG
 	 */
@@ -47,9 +49,10 @@ public class InscripcionBusiness {
 			Connection c = DbUtil.getConnection();
 
 			this.competicion = competicion;
-			// checkNotRepited(email, competicion.getIdCompeticion());
-			// checkInscripionDate(competicion.getIdCompeticion());
-			// checkFreeVacancies(competicion.getIdCompeticion());
+			
+			 checkNotRepited(email, competicion.getIdCompeticion());
+			 checkInscripionDate(competicion.getIdCompeticion());
+			 checkFreeVacancies(competicion.getIdCompeticion());
 
 			// inserting
 			PreparedStatement pst = c.prepareStatement(SQL_INSERT_INSCRIPTION);
@@ -67,18 +70,32 @@ public class InscripcionBusiness {
 
 			pst.execute();
 
+            // plazas libres de la competicion -> --
+
 			c.close();
 		} catch (SQLException e) {
 
 		}
 		// checking
+		catch (BusinessException e) {
+			//AQUÍ?
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
 	private String getFechaInscripción() {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		LocalDate localDate = LocalDate.now();
-		return dtf.format(localDate); // 2016/11/16
+		//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		//LocalDate localDate = LocalDate.now();
+		//return dtf.format(localDate); // 2016/11/16
+
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+		int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		String fecha = year + "-" + month + "-" + day;
+        return fecha;
 	}
 
 	/**
@@ -139,16 +156,52 @@ public class InscripcionBusiness {
 
 	/**
 	 * @author CMG
+	 * @throws BusinessException 
 	 */
-	public void checkInscripionDate(int idCompeticion) {
+	public void checkInscripionDate(int idCompeticion) throws BusinessException {
+       try {
+			// getConnection
+			Connection c = DbUtil.getConnection();
 
+			// inserting
+			PreparedStatement pst = c.prepareStatement(SQL_CORRECT_DATE);
+			pst.setInt(1, idCompeticion);
+            pst.setString(2, getFechaInscripción());
+            pst.setString(3, getFechaInscripción());
+			ResultSet rs = pst.executeQuery();
+
+			if (rs.next()) {
+				throw new BusinessException("No hay plazas libres en la competición " + idCompeticion );
+			}
+
+			c.close();
+		} catch (SQLException e) {
+
+		}  
 	}
 
 	/**
 	 * @author CMG
+	 * @throws BusinessException 
 	 */
-	public void checkFreeVacancies(int idCompeticion) {
+	public void checkFreeVacancies(int idCompeticion) throws BusinessException {
+		try {
+			// getConnection
+			Connection c = DbUtil.getConnection();
 
+			// inserting
+			PreparedStatement pst = c.prepareStatement(SQL_CHECK_FREE_VACANCIES);
+			pst.setInt(1, idCompeticion);
+			ResultSet rs = pst.executeQuery();
+
+			if (rs.next()) {
+				throw new BusinessException("No hay plazas libres en la competición " + idCompeticion );
+			}
+
+			c.close();
+		} catch (SQLException e) {
+
+		}
 	}
 
 	/**
