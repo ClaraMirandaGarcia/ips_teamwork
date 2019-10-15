@@ -42,6 +42,8 @@ public class UserWindow extends JDialog {
 	private Application app = null;
 	private CompetitionRegisterWindow competitionRegisterWindow = null;
 	
+	private List<CompeticionDTO> list = null;
+	
 //	##################################
 //			MÉTODOS PRIVADOS
 //	##################################
@@ -54,7 +56,7 @@ public class UserWindow extends JDialog {
 		
 		Object[] newRow = new Object[6];
 
-		List<CompeticionDTO> list = app.getCompeticionesAbiertas();
+		list = app.getCompeticionesAbiertas();
 		
 		for(CompeticionDTO dto : list) {
 			newRow[0] = dto.getNombre();
@@ -147,12 +149,25 @@ public class UserWindow extends JDialog {
 			btnInscribirme.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					// Código para inscribirse (Historia de usuario de Clara)
+					CompeticionDTO dto = getDTOFromTable(tCompeticiones);	
+					app.createInscripcion(dto);
 					createCompetitionRegisterWindow();
 				}
 			});
 		}
 		return btnInscribirme;
 	}
+	
+	private CompeticionDTO getDTOFromTable(JTable t) {
+		String nombre = (String)t.getValueAt(t.getSelectedRow(), 0);
+		for(CompeticionDTO each : list) {
+			if(each.getNombre().equals(nombre)) {
+				return each;
+			}
+		}
+		return null;
+	}
+	
 	private JPanel getPnButtonInscr() {
 		if (pnButtonInscr == null) {
 			pnButtonInscr = new JPanel();

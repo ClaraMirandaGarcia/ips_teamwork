@@ -74,6 +74,8 @@ public class CompetitionRegisterWindow extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						String email = txtEmail.getText();
+						//this.app.solicitar(email, this.app.getCompeticionDTO());
 						createReceiptWindow();
 					}
 				});

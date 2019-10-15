@@ -17,9 +17,7 @@ import ips.gcp.logic.exception.ApplicationException;
 
 public class InscripcionBusiness {
 
-	private AtletaDTO atleta;
-	private InscripcionDTO inscripcion;
-	private CompeticionDTO competicion = new CompeticionDTO();
+	private CompeticionDTO competicion;
 
 	private Categorias cs;
 
@@ -33,10 +31,8 @@ public class InscripcionBusiness {
 	private final static String SQL_SEARCH_COMPETITION_BY_ID = "select * from competition where idCompetition = ?";
 	private final static String SQL_CHECK_MORE_THAN_ONCE = "select * from inscripcion where email = ? and idCompeticion = ?";
 
-	public InscripcionBusiness(AtletaDTO atleta, InscripcionDTO inscripcion, Categorias cs) {
+	public InscripcionBusiness(Categorias cs) {
 
-		this.atleta = atleta;
-		this.inscripcion = inscripcion;
 		this.cs = cs;
 
 	}
@@ -63,7 +59,7 @@ public class InscripcionBusiness {
 			pst.setInt(2, competicion.getIdCompeticion());
 			pst.setString(3, getFechaInscripción());
 			calcularCategoria();
-			pst.setString(4, inscripcion.getCategoria());
+			//pst.setString(4, inscripcion.getCategoria());
 			pst.setString(5, STATE_BD);
 			pst.setDouble(6, AMOUNT_PAYED_BD);
 			pst.setTime(7, null);// HERE??
@@ -88,8 +84,8 @@ public class InscripcionBusiness {
 	/**
 	 * @author Adrian
 	 */
-	public void calcularCategoria() throws ApplicationException {
-		String fechaDeNacimiento = atleta.getFechaNacimiento();
+	public String calcularCategoria() throws ApplicationException {
+		String fechaDeNacimiento = /*atleta.getFechaNacimiento();*/null;
 		int edad = calcularEdad(fechaDeNacimiento);
 
 		String nombreCat = "NOCAT";
@@ -100,8 +96,8 @@ public class InscripcionBusiness {
 			}
 		}
 		if (nombreCat.equals("NOCAT"))
-			throw new ApplicationException("No se pudo establecer la categoría para el atleta " + atleta.getIdAtleta());
-		inscripcion.setCategoria(nombreCat);
+			throw new ApplicationException("No se pudo establecer la categoría para el atleta "/* + atleta.getIdAtleta()*/);
+		return nombreCat;
 	}
 
 	/**

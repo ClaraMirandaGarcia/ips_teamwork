@@ -11,10 +11,6 @@ public class Categorias {
 
 	private List<Categoria> categorias;
 	
-	public Categorias(String filename) {
-		categorias = cargarCategorias(filename);
-	}
-	
 	public List<Categoria> getCategorias(){
 		return categorias;
 	}
@@ -23,7 +19,7 @@ public class Categorias {
 		categorias.add(c);
 	}
 	
-	private List<Categoria> cargarCategorias(String filename) {
+	public List<Categoria> cargarCategorias(String filename) {
 		return FileUtil.loadFile(filename);
 	}
 	
